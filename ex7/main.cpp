@@ -35,7 +35,7 @@ enum OrderStatus {
 };
 
 /// Represents a customer's order in our shop
-class Order {
+lass Order {
 public:
     Order(int id, int productId, char* address)
         : m_id(id)
@@ -360,6 +360,7 @@ int main()
     shop.addProduct((char*)"Want Some", 10.0, (char*)"Quite expensive version of Some.");
 
     shop.showIndexView(); // this could be started with shop creation
+
     // it will allow changing to products list view
     // ... and the other view as well..
 
@@ -368,6 +369,7 @@ int main()
 
 /* TODO s
   - Add accounts
+    - how will it be integrated with the current system? Describe options and say why you've chosen the option you did.
     - an admin account will be able to:
         - [add|remove|edit]Product
         - update orders
@@ -375,3 +377,7 @@ int main()
     - in case a user is registered, the orderView may be simpler (we could get the address from the user's info)
   - add validation where needed - sometimes validation is unnecessary as improper input is not possible
  */
+
+
+
+
