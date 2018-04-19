@@ -191,7 +191,7 @@ void Skill::regenerateQuestions() {
      */
 
     // we might have just a small pool of questions
-    m_questionsCount = QUESTIONS_COUNT_PER_MODULE < m_questionPoolCount ? QUESTIONS_COUNT : m_questionPoolCount;
+    m_questionsCount = QUESTIONS_COUNT_PER_MODULE < m_questionPoolCount ? QUESTIONS_COUNT_PER_MODULE : m_questionPoolCount;
     // the simplest
     for (int i = 0; i < m_questionsCount; ++i) {
         m_questions[i] = m_questionsPool[m_lastTakenQuestionIdx];
