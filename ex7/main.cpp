@@ -6,11 +6,11 @@ using namespace std;
 const int MAX_PRODUCTS_COUNT = 100;
 const int MAX_ORDERS_COUNT = 100;
 
-// TODO
+// XXX not implemented
 class ProductsManager;
 class OrdersManager;
 
-/// TODO use something like: https://stackoverflow.com/questions/2978315/c-where-to-store-a-global-counter
+/// XXX use something like: https://stackoverflow.com/questions/2978315/c-where-to-store-a-global-counter
 int g_currentProductId = 1;
 /// Ensure unique ids using this global value
 ///
@@ -35,7 +35,7 @@ enum OrderStatus {
 };
 
 /// Represents a customer's order in our shop
-lass Order {
+class Order {
 public:
     Order(int id, int productId, char* address)
         : m_id(id)
@@ -54,7 +54,7 @@ public:
         delete[] m_address;
     }
 
-    // TODO
+    // XXX not implemented
     char* getAddress() const;
     int getProductId() const;
     OrderStatus getStatus() const;
@@ -63,9 +63,9 @@ public:
     void changeStatus();
 
 private:
-    int         m_id;
-    char*       m_address;
-    int         m_productId;
+    int m_id;
+    char* m_address;
+    int m_productId;
     OrderStatus m_status;
 };
 
@@ -85,8 +85,6 @@ public:
     {
         delete[] m_description;
     }
-
-    Product& operator=(const Product&); // TODO if needed
 
     /*
      * Mutators and selectors
@@ -131,10 +129,10 @@ public:
 
 private:
     /* data */
-    int    m_id;
+    int m_id;
     double m_price;
-    char   m_name[100];
-    char*  m_description;
+    char m_name[100];
+    char* m_description;
 };
 
 class BickieShop {
@@ -171,7 +169,7 @@ public:
         }
     }
 
-    void removeOrder(int orderId); // TODO
+    void removeOrder(int orderId); // XXX not implemented
 
     /*******************
     *  Product utils  *
@@ -202,18 +200,51 @@ public:
         }
     }
     void editProduct(int productId, char* name, char* desc, double price);
-    void removeProduct(int productId); // TODO
+    void removeProduct(int productId); // XXX not implemented
 
     /* View methods */
-    // TODO we can improve the behaviour and allowed options for the use as much as we want
+    /**
+     * Notice how the View methods are restricted to do just simple operations, without much knowledge for
+     * the surrounding infrastructure. They are responsible for:
+     * i) showing information to the user
+     * ii) getting response from them.
+     * iii) simply calling methods depending on the response
+     * The *means* by which they succeed in accomplishing visualization may be changed, e.g.
+     * we may want to use some graphical interface of else. Having such separation allows us to change
+     * only their implementation, avoiding changes to any other part of the system
+     *
+     * Last note: We are not creating any copies of the original objects
+     *
+     * We can improve the behaviour and allowed options for the use as much as we want
+     */
 
-    // Notice how the View methods are restricted to do just simple operations, without much knowledge for
-    // the surrounding class. They are responsible for i) showing information to the user and ii) getting
-    // response from them. The *means* by which they succeed to accomplish that may be changed, e.g.
-    // we may want to use some graphical interface of else. Having such separation allows us to change
-    // only their implementation, avoiding changes to any other part of the system
-    //
-    // Last note: We are not creating any copies of the original objects
+    /**
+     * WORKFLOW (Normal user) Simple version
+     * - index view -> products list view
+     * - products list view -> product details
+     * - order details -> order | index view
+     */
+    // ----------
+    /**
+     * Забележете, че View (страници) методите са ограничени до това да извършват съвсем прости опреции без да
+     * притежават особено знание за обграждащата ги инфраструктура. Те се грижат за:
+     * i) показване на информацията на потребителя (в момента използва ме конзолата като средство за визуализация)
+     * ii) за регистриране на "отговор" от тях
+     * iii) да използват конкретни методи в зависимост от този отговор
+     */
+
+    /**
+     * Поток на Работа (Обикновен потребител)
+     * * Начална страница   --> Списък продукти                   (накрая просто премини към детайли на продукт)
+     * * Списък продукти    -- id --> Детайли за продукт          (при въведен идентификатор, премини към детайли на продукт)
+     * * Детайли за продукт -- Y --> Поръчка на продукт | -- N --> Начална страница    (ако отговори с "Y" го прати страницата за поръчки, иначе при "N" върни към начална страница)
+     * * Поръчка на продукт --> Начална страница                  (накрая просто премини към начална страница)
+     *
+     *
+     * Поток на Работа (Администратор)
+     * * Начална страница --> ?                   (?)
+     * TODO
+     */
 
     void showIndexView()
     {
@@ -252,6 +283,7 @@ public:
             showIndexView();
         } else {
             // XXX could a product by the id be missing? What should we do?
+            // Възможно ли е продукт с конкретен идентификатор да липсва?
             showProductDetailsView(findProductById(answer));
         }
     }
@@ -311,14 +343,15 @@ public:
     // Admin views
     void showEditProductView(Product& product); // TODO
     void showOrdersView(Order* orders);         // TODO
+    // ...
 
 private:
     /* data */
     Product* m_products[MAX_PRODUCTS_COUNT];
-    int      m_productsCount;
+    int m_productsCount;
 
-    Order*   m_orders[MAX_ORDERS_COUNT];
-    int      m_ordersCount;
+    Order* m_orders[MAX_ORDERS_COUNT];
+    int m_ordersCount;
 };
 
 /// Remove item from the shop
@@ -359,25 +392,11 @@ int main()
     shop.addProduct((char*)"Some", 2.0, (char*)"The some of some.");
     shop.addProduct((char*)"Want Some", 10.0, (char*)"Quite expensive version of Some.");
 
-    shop.showIndexView(); // this could be started with shop creation
+    /* Tests go here... */
+    /* End tests */
 
-    // it will allow changing to products list view
-    // ... and the other view as well..
+    // Fire it up
+    shop.showIndexView(); // this could be started with shop creation
 
     return 0;
 }
-
-/* TODO s
-  - Add accounts
-    - how will it be integrated with the current system? Describe options and say why you've chosen the option you did.
-    - an admin account will be able to:
-        - [add|remove|edit]Product
-        - update orders
-            - edit order?
-    - in case a user is registered, the orderView may be simpler (we could get the address from the user's info)
-  - add validation where needed - sometimes validation is unnecessary as improper input is not possible
- */
-
-
-
-
